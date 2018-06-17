@@ -1,0 +1,6 @@
+_test
+*.o
+*~
+test_results
+.doit.db
+.python-version

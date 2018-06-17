@@ -1,0 +1,16 @@
+regions:
+  ALL:
+    type: "global"
+    addresses: [0, 0xFFFFFFFF]
+    subregions:
+      buffer:
+        type: "global"
+        addresses: [0x8bb98, 0x8bd98]
+      stack:
+        type: "stack"
+        addresses: [0xfffe0000, 0xffff0000]
+      ro:
+        type: "global"
+        addresses: [[0x0, 0x8bb898], [0x8bd98,0xfffe0000], [0xffff0000,0xffffffff]]
+
+stagename: "_single"
