@@ -1,0 +1,141 @@
+regions:
+  ROM:
+    type: "readonly"
+    addresses: [0x40000000, 0x4001C000]
+  RAM:
+    addresses: [0x40200000, 0x40210000]
+    include_children: True
+    type: "readonly"
+    subregions:
+      rom_stack:
+        type: "stack"
+        addresses: ["ROM_STACK_START", "ROM_STACK_END"]
+      downloaded_image:
+        addresses: ["ROM_STACK_END", 0x4020FFB0]
+        subregions:
+          downloaded_image_text:
+            type: "readonly"
+            addresses: ["RAM.downloaded_image.start", ".text.end"]
+          downloaded_image_data:
+            type: "bookkeeping"
+            addresses: [".text.end", "__image_copy_end"]
+          unused:
+            type: "readonly"
+            addresses: ["__image_copy_end", "SCRATCH_SPACE_ADDR"]
+          scratch_space:
+            type: "bookkeeping"
+            addresses: ["SCRATCH_SPACE_ADDR", "OMAP5_SCRATCH_SPACE_END"]
+          remainder:
+            type: "readonly"
+            addresses: ["OMAP5_SCRATCH_SPACE_END", 0x4020F000]
+          public_stack:
+            type: "readonly"
+            include_children: True
+            addresses: [0x4020F000, 0x4020FFB0]
+            subregions:
+              beginning:
+                type: "readonly"
+                addresses: [0x4020F000, 0x4020f840]
+              cpy_clk_code:
+                type: "future"
+                addresses: [0x4020f840, "0x4020f840 + lowlevel_init - cpy_clk_code"]
+              stack_rest0:
+                addresses: ["RAM.downloaded_image.public_stack.cpy_clk_code.end", 0x4020ff20]
+              stack_rest1:
+                addresses: [ 0x4020ff20, "RAM.downloaded_image.end"]
+      rest0:
+        addresses: ["RAM.downloaded_image.end", 0x4020fffc]
+        type: "readonly"
+      rest1:
+        addresses: [0x4020fffc, RAM.end]
+        type: "readonly"
+
+  RAM1:
+    include_children: True
+    type: "readonly"
+    addresses: ["RAM.start", "RAM.end"]
+    subregions:
+      begin:
+        type: "readonly"
+        addresses: ["RAM.start", ".text.end"]
+      downloaded_image_data:
+        type: "bookkeeping"
+        addresses: [".text.end", "__image_copy_end"]
+      later_stack:
+        type: "readonly"
+        addresses: ["__image_copy_end", "0x4020f840 + lowlevel_init - cpy_clk_code"]
+      global_data:
+        type: "stack"
+        addresses: ["0x4020f840 + lowlevel_init - cpy_clk_code",  0x4020ff20]
+      end:
+        type: "readonly"
+        addresses: [ 0x4020ff20, "RAM.end"]
+
+
+  SRAM:
+    type: "readonly"
+    addresses: [0x80000000, 0xc0000000]
+    include_children: True
+    subregions:
+      bss:
+        addresses: [0x80000000, 0x80030144]
+        subregions:
+          sram_test:
+            type: "patching"
+            addresses: [[0x80000000, 0x80000008], [0x80000400, 0x80000404]]
+          bss_rest:
+            addresses: "remainder"
+      after_bss:
+          addresses: [0x80030144, "CONFIG_SYS_TEXT_BASE - sizeof_struct_image_header"]
+          type: "readonly"
+      image_header:
+        type: "future"
+        addresses: ["CONFIG_SYS_TEXT_BASE - sizeof_struct_image_header", "CONFIG_SYS_TEXT_BASE"]
+      image:
+        type: "future"
+        addresses: ["CONFIG_SYS_TEXT_BASE", "CONFIG_SYS_TEXT_BASE + main.image_size"]
+      post_image:
+        addresses: ["CONFIG_SYS_TEXT_BASE + main.image_size", "CONFIG_SYS_SPL_MALLOC_START"]
+      heap:
+        type: "readonly"
+        addresses: ["CONFIG_SYS_SPL_MALLOC_START", "CONFIG_SYS_SPL_MALLOC_START + CONFIG_SYS_SPL_MALLOC_SIZE"]
+      nonbss:
+        type: "readonly"
+        addresses: ["CONFIG_SYS_SPL_MALLOC_START + CONFIG_SYS_SPL_MALLOC_SIZE", 0xc0000000]
+        include_children: True
+        subregions:
+          sram_test:
+            type: "patching"
+            addresses: [[0xA0000400, 0xA0000404], [0xA0000000, 0xA0000008]]
+          rest:
+            addresses: "remainder"
+
+  Registers:
+    csv: "{HardwareClass.bbxm.Files.mmap.path}"
+    type: "global"
+    include_children: True
+  missing_control_padconf0:
+    type: "global"
+    addresses: [0x48002150, 0x48002154]
+    comment: "address written to by boootloader (met_muxconf_regs) must not listed in am37x hardware reference"
+  missing_control_padconf1:
+    type: "global"
+    addresses: [0x48002154, 0x48002158]
+    comment: "address written to by boootloader (met_muxconf_regs) must not listed in am37x hardware reference"
+  missing_protection_mech_0:
+    type: "global"
+    addresses: [0x68010060, 0x68010068]
+    comment: "address written to by boootloader (secure_unlock_mem) must not listed in am37x hardware reference"
+
+values:
+  SRAM_STACK: 0x4020fffc
+  SCRATCH_SPACE_ADDR: 0x4020E000
+  OMAP5_SCRATCH_SPACE_END: 0x4020E030
+  ROM_STACK_START: 0x40200000
+  ROM_STACK_END: 0x40200800
+  CONFIG_SYS_SPL_MALLOC_START: 0x80208000
+  CONFIG_SYS_SPL_MALLOC_SIZE: 0x100000
+  CONFIG_SYS_TEXT_BASE: 0x80100000
+  sizeof_struct_image_header: 64
+
+stagename: "spl"

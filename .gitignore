@@ -4,3 +4,4 @@ _test
 test_results
 .doit.db
 .python-version
+trace-*
