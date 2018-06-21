@@ -1,6 +1,6 @@
 [submodule "uboot_bbxm/qemu-linaro"]
 	path = uboot_bbxm/qemu-linaro
-	url = https://git.linaro.org/qemu/qemu-linaro.git
+	url = https://github.com/bx/qemu-linaro-patched
 [submodule "uboot_bbxm/u-boot-src"]
 	path = uboot_bbxm/u-boot-src
 	url = https://github.com/bx/u-boot-extended
