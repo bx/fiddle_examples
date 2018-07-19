@@ -5,4 +5,4 @@ test_results
 .doit.db
 .python-version
 trace-*
-text_x86-32
+test_x86-32

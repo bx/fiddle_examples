@@ -1,6 +1,0 @@
-regions:
-  ALL:
-    type: "global"
-    addresses: [0, 0xFFFFFFFFFFFFFFFF]
-
-stagename: "_single"
