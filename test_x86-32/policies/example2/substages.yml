@@ -1,0 +1,22 @@
+_start:
+  substage_type: "bookkeeping"
+  new_regions: ["ALL.buffer", "ALL.stack", "ALL.ro"]  
+  reclassified_regions:
+    ALL.ro: "global"
+    ALL.stack: "stack"
+    ALL.buffer: "global"    
+
+
+main:
+  substage_type: "bookkeeping"  
+
+modify_memory:
+  substage_type: "bookkeeping"
+  reclassified_regions:
+    ALL.ro: "readonly"
+
+
+do_nothing:
+  substage_type: "bookkeeping"
+  reclassified_regions:
+    ALL.ro: "global"

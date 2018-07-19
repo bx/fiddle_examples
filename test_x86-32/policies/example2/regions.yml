@@ -1,0 +1,17 @@
+regions:
+  ALL:
+    type: "global"
+    addresses: [0, 0xFFFFFFFFFFFFFFFF]
+    subregions:
+      buffer:
+        type: "global"
+        addresses: ["memory", "memory + 0x200"]
+      stack:
+        type: "global"
+        addresses: [0x7fffff000000, 0x7fffffffff00]
+      ro:
+        type: "global"
+        addresses: "remainder"
+
+
+stagename: "_single"
