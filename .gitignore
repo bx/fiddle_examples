@@ -6,3 +6,4 @@ test_results
 .python-version
 trace-*
 test_x86-32
+*.org
