@@ -1,9 +1,13 @@
 [submodule "uboot_bbxm/qemu-linaro"]
 	path = uboot_bbxm/qemu-linaro
 	url = https://github.com/bx/qemu-linaro-patched
+	branch = public	
 [submodule "uboot_bbxm/u-boot-src"]
 	path = uboot_bbxm/u-boot-src
 	url = https://github.com/bx/u-boot-extended
+	branch = master	
 [submodule "uboot_bbxm/openocd-patched"]
 	path = uboot_bbxm/openocd-patched
 	url = https://github.com/bx/openocd-patched
+	branch = public
+
